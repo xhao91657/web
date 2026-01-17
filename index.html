@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤗 Hugging Face - AI开源平台领导者</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0A0A0F;
+            --bg-secondary: #12121A;
+            --bg-card: #1A1A26;
+            --accent-primary: #FFD21E;
+            --accent-secondary: #9D6CFF;
+            --accent-tertiary: #00D4AA;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0C0;
+            --text-muted: #7A7A8C;
+            --border-color: #2A2A3A;
+            --gradient-1: linear-gradient(135deg, #FFD21E 0%, #FF8A00 100%);
+            --gradient-2: linear-gradient(135deg, #9D6CFF 0%, #6C5CE7 100%);
+            --gradient-3: linear-gradient(135deg, #00D4AA 0%, #00A8FF 100%);
+            --gradient-dark: linear-gradient(135deg, #1A1A26 0%, #12121A 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 210, 30, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(157, 108, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 40% 80%, rgba(0, 212, 170, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* 导航栏 */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.92);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled {
+            padding: 15px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            font-weight: 600;
+            position: relative;
+            padding: 8px 0;
+            transition: all 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--gradient-1);
+            border-radius: 2px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: var(--gradient-1);
+            color: #000;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(255, 210, 30, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 210, 30, 0.4);
+        }
+
+        /* 英雄区域 */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 120px;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+            background: radial-gradient(circle at 70% 30%, rgba(255, 210, 30, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 30% 70%, rgba(157, 108, 255, 0.15) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 80px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 210, 30, 0.15);
+            color: var(--accent-primary);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 210, 30, 0.3);
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #FFFFFF 0%, #FFD21E 50%, #9D6CFF 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin-bottom: 50px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+
+        .hero-visual {
+            flex: 1;
+            position: relative;
+            height: 500px;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 20px;
+            background: var(--gradient-dark);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .floating-element:nth-child(1) {
+            top: 0;
+            right: 0;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(2) {
+            bottom: 0;
+            left: 0;
+            animation: float 6s ease-in-out infinite 2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        /* 数据展示区域 */
+        .data-section {
+            padding: 150px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 100px;
+        }
+
+        .stat-card {
+            background: var(--gradient-dark);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 210, 30, 0.3);
+        }
+
+        .stat-card:nth-child(2)::before {
+            background: var(--gradient-2);
+        }
+
+        .stat-card:nth-child(3)::before {
+            background: var(--gradient-3);
+        }
+
+        .stat-icon {
+            font-size: 40px;
+            margin-bottom: 25px;
+            display: inline-block;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-card:nth-child(1) .stat-icon {
+            color: var(--accent-primary);
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            color: var(--accent-secondary);
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            color: var(--accent-tertiary);
+        }
+
+        .stat-number-large {
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 15px;
+            font-feature-settings: "tnum";
+        }
+
+        .stat-card:nth-child(1) .stat-number-large {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card:nth-child(2) .stat-number-large {
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card:nth-child(3) .stat-number-large {
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* 技术栈展示 */
+        .tech-section {
+            padding: 150px 0;
+            background: rgba(18, 18, 26, 0.5);
+            border-radius: 60px;
+            margin: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .tech-card {
+            background: var(--bg-card);
+            border-radius: 25px;
+            padding: 50px 40px;
+            border: 1px solid var(--border-color);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .tech-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 210, 30, 0.03), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .tech-card:hover::after {
+            transform: translateX(100%);
+        }
+
+        .tech-icon {
+            font-size: 50px;
+            margin-bottom: 30px;
+            display: inline-block;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 210, 30, 0.1);
+        }
+
+        .tech-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .tech-description {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .tech-features {
+            list-style: none;
+        }
+
+        .tech-features li {
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .tech-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-primary);
+            font-weight: bold;
+        }
+
+        /* 模型展示 */
+        .models-section {
+            padding: 150px 0;
+        }
+
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .model-card {
+            background: var(--gradient-dark);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .model-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .model-header {
+            padding: 40px 40px 30px;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .model-badge {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: var(--gradient-1);
+            color: #000;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .model-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .model-developer {
+            color: var(--accent-primary);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .model-description {
+            color: var(--text-secondary);
+        }
+
+        .model-body {
+            padding: 30px 40px;
+        }
+
+        .model-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .model-stat {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+        }
+
+        .model-stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .model-stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* 页脚 */
+        footer {
+            background: var(--bg-secondary);
+            padding: 100px 0 50px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--gradient-1);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-primary);
+            transform: translateX(5px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 50px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            
+            .hero-content {
+                flex-direction: column;
+                gap: 60px;
+            }
+            
+            .hero-visual {
+                width: 100%;
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .stats-grid, .tech-grid, .models-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .stat-number {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .stat-number-large {
+                font-size: 3rem;
+            }
+            
+            .tech-card, .model-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header id="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <div class="logo-icon">🤗</div>
+                    <div class="logo-text">Hugging Face</div>
+                </div>
+                
+                <div class="nav-links">
+                    <a href="#home" class="nav-link active">首页</a>
+                    <a href="#stats" class="nav-link">数据统计</a>
+                    <a href="#tech" class="nav-link">技术栈</a>
+                    <a href="#models" class="nav-link">热门模型</a>
+                    <a href="#community" class="nav-link">社区</a>
+                </div>
+                
+                <button class="cta-button">开始使用</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 首页/英雄区域 -->
+    <section id="home" class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <div class="hero-badge">AI开源平台领导者</div>
+                    <h1 class="hero-title">构建AI的未来，从Hugging Face开始</h1>
+                    <p class="hero-subtitle">
+                        Hugging Face是全球最大的机器学习开源社区和平台，提供420,000+预训练模型、84,000+数据集和最先进的工具库，
+                        让每个开发者都能轻松构建、共享和部署最先进的AI模型。
+                    </p>
+                    <button class="cta-button">立即探索平台</button>
+                    
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <div class="stat-number" data-count="420000">420,000+</div>
+                            <div class="stat-label">开源模型</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="stat-number" data-count="84000">84,000+</div>
+                            <div class="stat-label">数据集</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="stat-number" data-count="22000000000">22B+</div>
+                            <div class="stat-label">模型下载</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="floating-element">
+                        <i class="fas fa-brain" style="font-size: 60px; color: var(--accent-primary); margin-bottom: 20px;"></i>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 10px;">Transformers</h3>
+                        <p style="color: var(--text-secondary); text-align: center;">最先进的NLP、CV和多模态模型库</p>
+                    </div>
+                    <div class="floating-element">
+                        <i class="fas fa-users" style="font-size: 60px; color: var(--accent-secondary); margin-bottom: 20px;"></i>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 10px;">全球社区</h3>
+                        <p style="color: var(--text-secondary); text-align: center;">来自200+国家的开发者与研究者</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据统计区域 -->
+    <section id="stats" class="data-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">令人惊叹的平台数据</h2>
+                <p class="section-subtitle">
+                    Hugging Face已成为全球AI开发者不可或缺的基础设施，每天处理数百万次模型推理请求
+                </p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <div class="stat-number-large" data-count="423000">423,000+</div>
+                    <h3>开源模型</h3>
+                    <p class="stat-description">
+                        覆盖自然语言处理、计算机视觉、音频处理、强化学习、多模态等所有AI领域，
+                        包括BERT、GPT、Stable Diffusion、Whisper等最先进模型。
+                    </p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-number-large" data-count="84000">84,000+</div>
+                    <h3>数据集</h3>
+                    <p class="stat-description">
+                        高质量标注数据集，覆盖100+种语言，包含文本、图像、音频、视频等多种格式，
+                        支持从研究到生产的全流程数据需求。
+                    </p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-cloud-download-alt"></i>
+                    </div>
+                    <div class="stat-number-large" data-count="22000000000">22B+</div>
+                    <h3>模型下载</h3>
+                    <p class="stat-description">
+                        自2020年6月以来的累计下载量，每月增长超过1亿次下载，
+                        服务全球85,000+组织，包括Google、Microsoft、Amazon等科技巨头。
+                    </p>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="stat-number-large" data-count="200">200+</div>
+                    <h3>国家与地区</h3>
+                    <p class="stat-description">
+                        平台用户覆盖全球200多个国家和地区，形成真正的全球开发者社区，
+                        中国开发者贡献占比17.1%，超过美国的15.8%。
+                    </p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="stat-number-large" data-count="85000">85,000+</div>
+                    <h3>组织用户</h3>
+                    <p class="stat-description">
+                        全球超过85,000个组织使用Hugging Face平台，
+                        包括财富500强企业、研究机构、初创公司和教育机构。
+                    </p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <div class="stat-number-large" data-count="4500000">4.5M+</div>
+                    <h3>代码仓库</h3>
+                    <p class="stat-description">
+                        平台托管超过450万个代码仓库，每日新增数千个模型和数据集，
+                        形成活跃的开源协作生态系统。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技术栈展示 -->
+    <section id="tech" class="tech-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">完整的AI技术栈</h2>
+                <p class="section-subtitle">
+                    Hugging Face提供从数据处理到模型部署的全套开源工具，支持AI项目的整个生命周期
+                </p>
+            </div>
+            
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3 class="tech-title">🤗 Transformers</h3>
+                    <p class="tech-description">
+                        最受欢迎的NLP库，提供数千个预训练模型，支持PyTorch、TensorFlow和JAX框架。
+                    </p>
+                    <ul class="tech-features">
+                        <li>12,000+预训练模型</li>
+                        <li>支持100+种语言</li>
+                        <li>每月1亿+次下载</li>
+                        <li>完整的模型微调工具链</li>
+                        <li>生产环境部署支持</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="tech-title">🤗 Datasets</h3>
+                    <p class="tech-description">
+                        高效的数据处理库，提供对数千个数据集的快速访问和预处理功能。
+                    </p>
+                    <ul class="tech-features">
+                        <li>84,000+数据集</li>
+                        <li>内存优化加载</li>
+                        <li>自动数据预处理</li>
+                        <li>流式大数据集支持</li>
+                        <li>多格式数据支持</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3 class="tech-title">🤗 Hub</h3>
+                    <p class="tech-description">
+                        机器学习协作平台，类似"GitHub for ML"，提供模型、数据集和应用托管。
+                    </p>
+                    <ul class="tech-features">
+                        <li>无限免费托管</li>
+                        <li>Git版本控制</li>
+                        <li>模型卡片和文档</li>
+                        <li>社区协作功能</li>
+                        <li>自动化CI/CD</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="tech-grid" style="margin-top: 40px;">
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3 class="tech-title">🤗 Spaces</h3>
+                    <p class="tech-description">
+                        免费的模型部署平台，可将任何模型快速转换为交互式Web应用。
+                    </p>
+                    <ul class="tech-features">
+                        <li>免费GPU托管</li>
+                        <li>自动缩放</li>
+                        <li>自定义UI界面</li>
+                        <li>API端点生成</li>
+                        <li>100,000+活跃应用</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="tech-title">🤗 Accelerate</h3>
+                    <p class="tech-description">
+                        分布式训练库，简化多GPU、多节点训练配置，支持混合精度训练。
+                    </p>
+                    <ul class="tech-features">
+                        <li>简化分布式训练</li>
+                        <li>支持TPU/GPU/CPU</li>
+                        <li>自动混合精度</li>
+                        <li>梯度累积</li>
+                        <li>深度学习优化</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="tech-title">🤗 Evaluate</h3>
+                    <p class="tech-description">
+                        模型评估库，提供标准化评估指标和基准测试，确保模型质量。
+                    </p>
+                    <ul class="tech-features">
+                        <li>100+评估指标</li>
+                        <li>标准化基准测试</li>
+                        <li>自动化评估流水线</li>
+                        <li>多语言支持</li>
+                        <li>研究复现支持</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 模型展示 -->
+    <section id="models" class="models-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">热门开源模型</h2>
+                <p class="section-subtitle">
+                    探索平台上最受欢迎的开源AI模型，涵盖各种任务和应用场景
+                </p>
+            </div>
+            
+            <div class="models-grid">
+                <div class="model-card">
+                    <div class="model-header">
+                        <div class="model-badge">#1 趋势</div>
+                        <h3 class="model-name">Llama 3.1</h3>
+                        <div class="model-developer">Meta AI</div>
+                        <p class="model-description">
+                            最新一代开源大语言模型，在推理、编码和多语言任务上表现卓越。
+                        </p>
+                    </div>
+                    <div class="model-body">
+                        <div class="model-stats">
+                            <div class="model-stat">
+                                <div class="model-stat-value">1.2M+</div>
+                                <div class="model-stat-label">下载量</div>
+                            </div>
+                            <div class="model-stat">
+                                <div class="model-stat-value">8B-70B</div>
+                                <div class="model-stat-label">参数规模</div>
+                            </div>
+                            <div class="model-stat">
+                                <div class="model-stat-value">100+</div>
+                                <div class="model-stat-label">支持语言</div>
+                            </div>
+                            <div class="model-stat">
+                                <div class="model-stat-value">1.5M</div>
+                                <div class="model-stat-label">训练数据</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="model-card">
+                    <div class="model-header">
+                        <div class="model-badge">图像生成</div>
+                        <h3 class="model-name">Stable Diffusion 3</h3>
+                        <div class="model-developer">Stability AI</div>
+                        <p class="model-description">
+                            先进的文生图模型，提供更高质量的图像生成和更好的文本理解。
+                        </p>
+                    </div>
+                    <div class="model-body">
+                        <div class="model-stats">
+                            <div class="model-stat">
+                                <div class="model-stat-value">890K+</div>
+                                <div class="model-stat-label">下载量</div>
+                            </div>
+                            <div class="model-stat">
+                                <div class="model-stat-value">8B</div>
+                                <div class="model-stat-label">参数规模</div>
+                            </div>
+                            <div class="model-stat">
+                                <div class="model-stat-value">8K</div>
+                                <div class="model-stat-label">分辨率</div>
+                            </div>
+                            <div class="model-stat">
+                                <div class="model-stat-value">3.0</div>
+                                <div class="model-stat-label">版本</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="model-card">
+                    <div class="model-header">
+                        <div class="model-badge">语音识别</div>
+                        <h3 class="model-name">Whisper-large-v3</h3>
+                        <div class="model-developer">OpenAI</div>
+                        <p class="model-description">
+                            强大的语音识别模型，支持多语言转录和翻译，表现优异。
+                        </p>
+                    </div>
+                    <div class="model-body">
+                        <div class="model-stats">
+                            <div class="model-stat">
+                                <div class="model-stat-value">670K+</div>
+                                <div class="model-stat-label">下载量</div>
+                            </div>
+                            <div class="model-stat">
+                                <div class="model-stat-value">1.5B</div>
+                                <div class="model-stat-label">参数规模</div>
+                            </div>
+                            <div class="model-stat">
+                                <div class="model-stat-value">99+</div>
+                                <div class="model-stat-label">支持语言</div>
+                            </div>
+                            <div class="model-stat">
+                                <div class="model-stat-value">680K</div>
+                                <div class="model-stat-label">训练时长</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer id="community">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Hugging Face</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-robot"></i> 平台介绍</a></li>
+                        <li><a href="#"><i class="fas fa-chart-line"></i> 数据统计</a></li>
+                        <li><a href="#"><i class="fas fa-tools"></i> 技术栈</a></li>
+                        <li><a href="#"><i class="fas fa-cube"></i> 模型库</a></li>
+                        <li><a href="#"><i class="fas fa-users"></i> 社区</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>开源项目</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-exchange-alt"></i> Transformers</a></li>
+                        <li><a href="#"><i class="fas fa-database"></i> Datasets</a></li>
+                        <li><a href="#"><i class="fas fa-cube"></i> Hub</a></li>
+                        <li><a href="#"><i class="fas fa-laptop-code"></i> Spaces</a></li>
+                        <li><a href="#"><i class="fas fa-bolt"></i> Accelerate</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>学习资源</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-book"></i> 官方文档</a></li>
+                        <li><a href="#"><i class="fas fa-graduation-cap"></i> 教程课程</a></li>
+                        <li><a href="#"><i class="fas fa-newspaper"></i> 博客新闻</a></li>
+                        <li><a href="#"><i class="fas fa-file-alt"></i> 论文解读</a></li>
+                        <li><a href="#"><i class="fas fa-video"></i> 视频教程</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>企业服务</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-building"></i> 企业Hub</a></li>
+                        <li><a href="#"><i class="fas fa-server"></i> 推理端点</a></li>
+                        <li><a href="#"><i class="fas fa-cogs"></i> 定制训练</a></li>
+                        <li><a href="#"><i class="fas fa-headset"></i> 技术咨询</a></li>
+                        <li><a href="#"><i class="fas fa-handshake"></i> 合作伙伴</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>© 2025 Hugging Face 平台介绍 | 本页面为非官方展示网站 | 数据统计截至2025年8月</p>
+                <p style="margin-top: 10px;">Hugging Face是Hugging Face Inc.的注册商标 | 设计仅供展示与学习使用</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 导航栏滚动效果
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+            
+            // 平滑滚动导航
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // 更新导航状态
+                        document.querySelectorAll('.nav-link').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                        
+                        // 平滑滚动
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 滚动时更新导航状态
+            const sections = document.querySelectorAll('section[id]');
+            window.addEventListener('scroll', function() {
+                let current = '';
+                const scrollPosition = window.scrollY + 150;
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            // 数字动画
+            function animateNumbers() {
+                const numberElements = document.querySelectorAll('.stat-number-large, .hero-stat .stat-number');
+                
+                numberElements.forEach(element => {
+                    const target = parseInt(element.getAttribute('data-count') || element.textContent.replace(/[^0-9]/g, ''));
+                    const duration = 2000; // 2秒
+                    const increment = target / (duration / 16); // 60fps
+                    let current = 0;
+                    
+                    const updateNumber = () => {
+                        current += increment;
+                        if (current < target) {
+                            // 格式化大数字
+                            if (target > 1000000) {
+                                element.textContent = Math.floor(current / 1000000) + 'M+';
+                            } else if (target > 1000) {
+                                element.textContent = Math.floor(current / 1000) + 'K+';
+                            } else {
+                                element.textContent = Math.floor(current) + '+';
+                            }
+                            requestAnimationFrame(updateNumber);
+                        } else {
+                            // 最终值
+                            if (target > 1000000) {
+                                element.textContent = Math.floor(target / 1000000) + 'M+';
+                            } else if (target > 1000) {
+                                element.textContent = Math.floor(target / 1000) + 'K+';
+                            } else {
+                                element.textContent = target + '+';
+                            }
+                        }
+                    };
+                    
+                    // 检查元素是否在视口中
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                updateNumber();
+                                observer.unobserve(element);
+                            }
+                        });
+                    }, { threshold: 0.5 });
+                    
+                    observer.observe(element);
+                });
+            }
+            
+            // 初始化数字动画
+            setTimeout(animateNumbers, 500);
+            
+            // 按钮点击效果
+            document.querySelectorAll('.cta-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                        // 滚动到模型部分
+                        document.querySelector('#models').scrollIntoView({ behavior: 'smooth' });
+                    }, 150);
+                });
+            });
+            
+            // 卡片悬停效果增强
+            document.querySelectorAll('.stat-card, .tech-card, .model-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.zIndex = '10';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.zIndex = '';
+                });
+            });
+            
+            // 初始化页面
+            window.dispatchEvent(new Event('scroll'));
+        });
+    </script>
+</body>
+</html>
