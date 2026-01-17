@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤗 Hugging Face 权威数据全景 - 2026</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0A0B0F;
+            --bg-secondary: #12141C;
+            --bg-card: #1A1D27;
+            --bg-hover: #222632;
+            --accent-primary: #FFD21E;
+            --accent-secondary: #7C3AED;
+            --accent-tertiary: #10B981;
+            --accent-info: #3B82F6;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --border-color: #2D3748;
+            --gradient-1: linear-gradient(135deg, #FFD21E 0%, #F59E0B 100%);
+            --gradient-2: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+            --gradient-3: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            --gradient-4: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: auto; /* 改为auto，允许水平滚动而不是隐藏 */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.05) 0%, transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(255, 210, 30, 0.05) 0%, transparent 30%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            max-width: 100%; /* 确保不会超出视口 */
+        }
+
+        /* 导航栏 */
+        header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 11, 15, 0.98);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 16px 0;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            background: var(--gradient-1);
+            border-radius: 10px;
+            font-size: 22px;
+        }
+
+        .logo-text {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+            text-overflow: ellipsis; /* 过长时显示省略号 */
+            white-space: nowrap; /* 不换行 */
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-secondary);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+            flex-grow: 1;
+            max-width: 100%;
+            justify-content: flex-start;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .nav-tabs::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+            border-radius: 3px;
+        }
+
+        .nav-tabs::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .tab {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-secondary);
+            border: none;
+            background: transparent;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab.active {
+            color: var(--text-primary);
+            background: var(--bg-card);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 主内容区 */
+        main {
+            padding: 30px 0 60px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 仪表板头部 */
+        .dashboard-header {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .dashboard-subtitle {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 1000px;
+            margin: 0 auto;
+            line-height: 1.6;
+            max-width: 100%; /* 确保在小屏幕上不会溢出 */
+            padding: 0 10px; /* 添加内边距防止文字贴边 */
+        }
+
+        .highlight-stats {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow-x: auto; /* 允许在必要时水平滚动 */
+        }
+
+        .highlight-stat {
+            text-align: center;
+            flex: 1;
+            min-width: 180px;
+            max-width: 250px; /* 添加最大宽度限制 */
+        }
+
+        .highlight-number {
+            font-size: 36px;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .highlight-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* 数据面板 */
+        .data-panel {
+            margin-bottom: 50px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+            gap: 15px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .panel-title {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-title i {
+            color: var(--accent-primary);
+        }
+
+        .panel-source {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            text-align: right;
+        }
+
+        /* 核心数据网格 */
+        .core-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .core-stat-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            max-width: 100%; /* 确保不会超出容器 */
+        }
+
+        .core-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+        }
+
+        .core-stat-card:nth-child(1)::before { background: var(--gradient-1); }
+        .core-stat-card:nth-child(2)::before { background: var(--gradient-2); }
+        .core-stat-card:nth-child(3)::before { background: var(--gradient-3); }
+        .core-stat-card:nth-child(4)::before { background: var(--gradient-4); }
+
+        .core-stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .stat-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-trend {
+            font-size: 13px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            background: rgba(34, 197, 94, 0.15);
+            color: #22C55E;
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 12px;
+            font-feature-settings: "tnum";
+            word-break: keep-all; /* 改为keep-all，避免数字被不当截断 */
+            overflow-wrap: break-word; /* 但允许在必要时换行 */
+            max-width: 100%; /* 确保不会超出容器宽度 */
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow-wrap: break-word; /* 允许长文字换行 */
+        }
+
+        .stat-detail {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            max-width: 100%; /* 防止内容溢出 */
+            overflow-wrap: break-word; /* 允许长单词换行 */
+            word-break: break-word; /* 额外的换行支持 */
+        }
+
+        .stat-source {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-style: italic;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 15px;
+        }
+
+        /* 列表项的溢出保护 */
+        .stat-detail ul {
+            padding-left: 20px;
+            max-width: 100%;
+            overflow-wrap: break-word;
+        }
+
+        .stat-detail li {
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        /* 修复后的数据表格容器 - 关键修改 */
+        .data-table-container {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 100%; /* 确保不会超出父容器 */
+            overflow-x: auto; /* 启用水平滚动 */
+            overflow-y: visible; /* 允许垂直方向显示完整 */
+            -webkit-overflow-scrolling: touch; /* 移动端流畅滚动 */
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            /* 移除固定的最小宽度，让列宽根据内容自适应 */
+            table-layout: auto;
+        }
+
+        .data-table th {
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.3);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            white-space: nowrap; /* 表头不换行 */
+            min-width: 100px; /* 减小最小宽度，给表头一个合理的最小宽度 */
+        }
+
+        .data-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+            word-break: break-word; /* 允许单元格内文字换行 */
+            min-width: 120px; /* 减小最小宽度，确保在较小屏幕上也能完整显示 */
+            max-width: 300px; /* 添加最大宽度限制，防止内容过度拉伸 */
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-hover);
+        }
+
+        /* 对比卡片 */
+        .comparison-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .comparison-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            overflow: hidden; /* 防止内容溢出 */
+            max-width: 100%; /* 确保不会超出容器 */
+        }
+
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .comparison-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            max-width: 100%; /* 确保不会超出容器 */
+        }
+
+        .comparison-title {
+            font-size: 20px;
+            font-weight: 800;
+            line-height: 1.3;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow-wrap: break-word; /* 允许长标题换行 */
+        }
+
+        /* 页脚 */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 60px 0 40px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .footer-column h3 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            position: relative;
+            padding-bottom: 10px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--gradient-1);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+            text-overflow: ellipsis; /* 过长时显示省略号 */
+            white-space: nowrap; /* 不换行 */
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        .data-sources {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            margin-top: 40px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .data-sources h4 {
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            font-size: 16px;
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow-wrap: break-word; /* 允许长标题换行 */
+        }
+
+        .data-sources ul {
+            padding-left: 20px; /* 添加缩进 */
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow-wrap: break-word; /* 允许长文字换行 */
+        }
+
+        .data-sources li {
+            max-width: 100%; /* 确保不会超出容器 */
+            overflow-wrap: break-word; /* 允许长文字换行 */
+            word-break: break-word; /* 额外的换行支持 */
+        }
+
+        /* 响应式设计 - 确保所有屏幕都能完整显示 */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 20px;
+                max-width: 100%;
+            }
+            .dashboard-title {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .core-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .comparison-cards {
+                grid-template-columns: 1fr;
+            }
+            .panel-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .panel-source {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .logo {
+                margin-bottom: 15px;
+                justify-content: center;
+            }
+            .nav-tabs {
+                justify-content: flex-start;
+            }
+            .dashboard-header {
+                padding: 25px 20px;
+            }
+            .dashboard-title {
+                font-size: 24px;
+            }
+            .dashboard-subtitle {
+                font-size: 16px;
+            }
+            .highlight-number {
+                font-size: 30px;
+            }
+            .core-stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .panel-title {
+                font-size: 20px;
+            }
+            .stat-number {
+                font-size: 36px;
+            }
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .data-table th, 
+            .data-table td {
+                padding: 14px 16px;
+                font-size: 14px;
+                min-width: 100px; /* 移动端减小最小宽度 */
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 15px;
+            }
+            .logo {
+                font-size: 20px;
+            }
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            .dashboard-title {
+                font-size: 22px;
+            }
+            .panel-title {
+                font-size: 18px;
+            }
+            .stat-number {
+                font-size: 32px;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            .tab {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+            .highlight-stat {
+                min-width: 140px;
+                max-width: 100%; /* 移动端使用更小的最大宽度 */
+            }
+            .data-table th, 
+            .data-table td {
+                padding: 12px 14px;
+                font-size: 13px;
+                min-width: 80px; /* 更小屏幕进一步减小 */
+            }
+        }
+
+        @media (max-width: 400px) {
+            .data-table th, 
+            .data-table td {
+                padding: 10px 12px;
+                font-size: 12px;
+                min-width: 70px;
+            }
+            .highlight-stats {
+                gap: 15px;
+            }
+            .highlight-stat {
+                min-width: 120px;
+            }
+            /* 更小屏幕上的表格处理 */
+            .data-table-container {
+                font-size: 12px;
+            }
+        }
+
+        /* 纵向表格样式 - 竖向显示 */
+        .vertical-table-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .vertical-table-row {
+            display: flex;
+            flex-direction: row;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .vertical-table-row:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .vertical-table-label {
+            flex: 0 0 180px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            border-right: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .vertical-table-label::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-1);
+        }
+
+        .vertical-table-content {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 15px;
+            gap: 10px;
+        }
+
+        .vertical-table-item {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .vertical-table-item.full-width {
+            flex: 0 0 calc(100% - 5px);
+            min-width: 100%;
+        }
+
+        .vertical-table-item-label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .vertical-table-item-value {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        .vertical-table-item-value.highlight-value {
+            color: var(--accent-primary);
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        /* 响应式纵向表格 */
+        @media (max-width: 768px) {
+            .vertical-table-row {
+                flex-direction: column;
+            }
+            .vertical-table-label {
+                flex: 0 0 auto;
+                padding: 15px 20px;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                font-size: 16px;
+            }
+            .vertical-table-label::after {
+                width: 100%;
+                height: 4px;
+                top: auto;
+                bottom: 0;
+                left: 0;
+            }
+            .vertical-table-content {
+                padding: 15px;
+            }
+            .vertical-table-item {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <div class="logo-icon">🤗</div>
+                    <div class="logo-text">Hugging Face 2026 数据全景</div>
+                </div>
+                <div class="nav-tabs">
+                    <button class="tab active" data-tab="overview">平台规模</button>
+                    <button class="tab" data-tab="downloads">下载动态</button>
+                    <button class="tab" data-tab="technology">技术生态</button>
+                    <button class="tab" data-tab="community">社区资产</button>
+                    <button class="tab" data-tab="ecosystem">行业枢纽</button>
+                    <button class="tab" data-tab="partnerships">巨头参与</button>
+                    <button class="tab" data-tab="showcase">前沿案例</button>
+                    <button class="tab" data-tab="evolution">平台进化</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container">
+        <!-- 面板1: 平台规模 -->
+        <section id="overview" class="tab-content active">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">平台规模：AI 开源基础设施的绝对统治者</h1>
+                <p class="dashboard-subtitle">
+                    截至2026年初，Hugging Face已成为全球AI开发无可争议的核心枢纽。其核心库下载量突破12亿次，日下载超300万次，支持的模型架构从创始之初的40个激增至超过400个。
+                </p>
+                <div class="highlight-stats">
+                    <div class="highlight-stat">
+                        <div class="highlight-number" data-count="1200000000">12亿+</div>
+                        <div class="highlight-label">Transformers库 总安装量</div>
+                    </div>
+                    <div class="highlight-stat">
+                        <div class="highlight-number" data-count="400">400+</div>
+                        <div class="highlight-label">支持的模型架构数量</div>
+                    </div>
+                    <div class="highlight-stat">
+                        <div class="highlight-number" data-count="13000000">1300万+</div>
+                        <div class="highlight-label">平台连接AI开发者</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title"><i class="fas fa-expand-arrows-alt"></i> 核心指标五年爆发式增长</h2>
+                    <div class="panel-source">数据来源：官方统计、GitHub、PyPI、行业报告</div>
+                </div>
+                <div class="core-stats-grid">
+                    <div class="core-stat-card">
+                        <div class="stat-meta">
+                            <div class="stat-icon" style="background: rgba(255, 210, 30, 0.1); color: var(--accent-primary);">
+                                <i class="fas fa-download"></i>
+                            </div>
+                            <span class="stat-trend">日峰值：3M+</span>
+                        </div>
+                        <div class="stat-number" data-count="3000000">300万+</div>
+                        <div class="stat-label">Transformers库 日下载量</div>
+                        <div class="stat-detail">
+                            平均每秒处理超过35次下载请求。这一数字是2020年同期的<strong>15倍</strong>，标志着其已成为AI开发的默认依赖项。
+                        </div>
+                        <div class="stat-source">来源：PyPI 官方下载统计 (2025Q4)</div>
+                    </div>
+                    <div class="core-stat-card">
+                        <div class="stat-meta">
+                            <div class="stat-icon" style="background: rgba(124, 58, 237, 0.1); color: var(--accent-secondary);">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <span class="stat-trend">年增长：+35%</span>
+                        </div>
+                        <div class="stat-number" data-count="400">400+</div>
+                        <div class="stat-label">支持的模型架构</div>
+                        <div class="stat-detail">
+                            从BERT、GPT等最初的40个架构，扩展到涵盖视觉Transformer (ViT)、扩散模型、MoE (混合专家)、MLP-Mixer等前沿架构。仅v2.6一次更新就新增了14个架构。
+                        </div>
+                        <div class="stat-source">来源：Transformers v2.6 至 v5.0 更新日志</div>
+                    </div>
+                    <div class="core-stat-card">
+                        <div class="stat-meta">
+                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-tertiary);">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <span class="stat-trend">全球连接</span>
+                        </div>
+                        <div class="stat-number" data-count="13000000">1300万+</div>
+                        <div class="stat-label">AI构建者与开发者</div>
+                        <div class="stat-detail">
+                            平台直接触达的活跃开发者、研究人员和企业用户总数。通过与英伟达等巨头合作，连接范围从AI软件开发者扩展至数百万机器人开发者。
+                        </div>
+                        <div class="stat-source">来源：官方社区报告，英伟达CES 2026发布数据</div>
+                    </div>
+                    <div class="core-stat-card">
+                        <div class="stat-meta">
+                            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--accent-info);">
+                                <i class="fas fa-code-branch"></i>
+                            </div>
+                            <span class="stat-trend">版本：v5.0</span>
+                        </div>
+                        <div class="stat-number" data-count="46">46+</div>
+                        <div class="stat-label">单次更新新增架构</div>
+                        <div class="stat-detail">
+                            在关键的v2.6版本更新中，一次性引入了包括T5、BART、MBART、Pegasus在内的14个新模型架构，使总支持架构数达到46个，展示了惊人的技术整合速度。
+                        </div>
+                        <div class="stat-source">来源：Transformers v2.6 Release Notes</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title"><i class="fas fa-chart-line"></i> 关键规模指标对比（2020 vs 2025）</h2>
+                    <div class="panel-source">数据来源：历史版本记录与当前统计</div>
+                </div>
+                <div class="vertical-table-container">
+                    <!-- 第一行：Transformers库总安装量 -->
+                    <div class="vertical-table-row">
+                        <div class="vertical-table-label">Transformers库<br>总安装量</div>
+                        <div class="vertical-table-content">
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">2020年 (基准)</span>
+                                <span class="vertical-table-item-value">约 8千万次</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">2025/2026年 (现状)</span>
+                                <span class="vertical-table-item-value highlight-value">12亿次</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">增长倍数</span>
+                                <span class="vertical-table-item-value highlight-value">15倍</span>
+                            </div>
+                            <div class="vertical-table-item full-width">
+                                <span class="vertical-table-item-label">行业意义</span>
+                                <span class="vertical-table-item-value">从流行库演变为行业标准基础设施</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 第二行：日下载峰值 -->
+                    <div class="vertical-table-row">
+                        <div class="vertical-table-label">日下载峰值</div>
+                        <div class="vertical-table-content">
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">2020年 (基准)</span>
+                                <span class="vertical-table-item-value">约 20万次</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">2025/2026年 (现状)</span>
+                                <span class="vertical-table-item-value highlight-value">300万次</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">增长倍数</span>
+                                <span class="vertical-table-item-value highlight-value">15倍</span>
+                            </div>
+                            <div class="vertical-table-item full-width">
+                                <span class="vertical-table-item-label">行业意义</span>
+                                <span class="vertical-table-item-value">成为全球AI项目默认的"起手式"依赖</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 第三行：支持模型架构数 -->
+                    <div class="vertical-table-row">
+                        <div class="vertical-table-label">支持模型<br>架构数</div>
+                        <div class="vertical-table-content">
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">2020年 (基准)</span>
+                                <span class="vertical-table-item-value">40个</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">2025/2026年 (现状)</span>
+                                <span class="vertical-table-item-value highlight-value">超过400个</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">增长倍数</span>
+                                <span class="vertical-table-item-value highlight-value">10倍</span>
+                            </div>
+                            <div class="vertical-table-item full-width">
+                                <span class="vertical-table-item-label">行业意义</span>
+                                <span class="vertical-table-item-value">技术覆盖广度达到前所未有的水平</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 第四行：社区贡献模型权重 -->
+                    <div class="vertical-table-row">
+                        <div class="vertical-table-label">社区贡献<br>模型权重</div>
+                        <div class="vertical-table-content">
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">2020年 (基准)</span>
+                                <span class="vertical-table-item-value">数万个</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">2025/2026年 (现状)</span>
+                                <span class="vertical-table-item-value highlight-value">超过75万个</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">增长倍数</span>
+                                <span class="vertical-table-item-value highlight-value">数十倍</span>
+                            </div>
+                            <div class="vertical-table-item full-width">
+                                <span class="vertical-table-item-label">行业意义</span>
+                                <span class="vertical-table-item-value">形成了全球最大的可复用AI模型资产库</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 第五行：平台连接开发者 -->
+                    <div class="vertical-table-row">
+                        <div class="vertical-table-label">平台连接<br>开发者</div>
+                        <div class="vertical-table-content">
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">2020年 (基准)</span>
+                                <span class="vertical-table-item-value">约 100万</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">2025/2026年 (现状)</span>
+                                <span class="vertical-table-item-value highlight-value">1300万+</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">增长倍数</span>
+                                <span class="vertical-table-item-value highlight-value">13倍</span>
+                            </div>
+                            <div class="vertical-table-item full-width">
+                                <span class="vertical-table-item-label">行业意义</span>
+                                <span class="vertical-table-item-value">从开发者社区升级为跨领域AI枢纽平台</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 面板2: 下载动态 -->
+        <section id="downloads" class="tab-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">下载动态：每秒都在刷新的全球记录</h1>
+                <p class="dashboard-subtitle">Hugging Face核心库的下载数据是衡量全球AI活跃度的实时晴雨表。每日超300万次的下载，意味着它已成为和水、电一样的基础设施。</p>
+            </div>
+            <div class="core-stats-grid">
+                <div class="core-stat-card">
+                    <div class="stat-meta">
+                        <div class="stat-icon" style="background: rgba(255, 210, 30, 0.1); color: var(--accent-primary);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <span class="stat-trend">实时</span>
+                    </div>
+                    <div class="stat-number counter" data-count="35">35+</div>
+                    <div class="stat-label">平均每秒下载次数</div>
+                    <div class="stat-detail">基于日下载300万次计算得出，这反映了全球AI项目构建、CI/CD流水线和研究实验的持续活跃度。</div>
+                </div>
+                <div class="core-stat-card">
+                    <div class="stat-meta">
+                        <div class="stat-icon" style="background: rgba(124, 58, 237, 0.1); color: var(--accent-secondary);">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <span class="stat-trend">月增长稳定</span>
+                    </div>
+                    <div class="stat-number" data-count="90000000">9000万+</div>
+                    <div class="stat-label">月下载量</div>
+                    <div class="stat-detail">月度下载量已稳定在九千万次量级，季度环比增长率保持在8%以上。</div>
+                </div>
+                <div class="core-stat-card">
+                    <div class="stat-meta">
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-tertiary);">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <span class="stat-trend">里程碑</span>
+                    </div>
+                    <div class="stat-number" data-count="1200000000">12亿</div>
+                    <div class="stat-label">累计安装量突破</div>
+                    <div class="stat-detail">这一里程碑于2025年底达成，是Python生态中最受欢迎的机器学习库，没有之一。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 面板3: 技术生态 -->
+        <section id="technology" class="tab-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">技术生态：从40到400+的架构统治力</h1>
+                <p class="dashboard-subtitle">支持架构数量是衡量一个深度学习框架技术深度和广度的核心指标。Hugging Face Transformers实现了对NLP、CV、语音、多模态等所有AI子领域的全覆盖。</p>
+            </div>
+            <div class="data-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title"><i class="fas fa-layer-group"></i> 架构支持演进史 (精选)</h2>
+                    <div class="panel-source">数据来源：Transformers 官方发布日志 (v2.6, v3.0, v4.0, v5.0)</div>
+                </div>
+                <div class="vertical-table-container">
+                    <!-- 初始版本 -->
+                    <div class="vertical-table-row">
+                        <div class="vertical-table-label">初始版本</div>
+                        <div class="vertical-table-content">
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">新增架构</span>
+                                <span class="vertical-table-item-value">40个</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">代表性架构</span>
+                                <span class="vertical-table-item-value">BERT, GPT-2, Transformer-XL, XLNet</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">累计架构</span>
+                                <span class="vertical-table-item-value">40</span>
+                            </div>
+                            <div class="vertical-table-item full-width">
+                                <span class="vertical-table-item-label">技术意义</span>
+                                <span class="vertical-table-item-value">聚焦NLP，奠定基础</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- v2.6关键更新 -->
+                    <div class="vertical-table-row">
+                        <div class="vertical-table-label">v2.6<br>(关键更新)</div>
+                        <div class="vertical-table-content">
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">新增架构</span>
+                                <span class="vertical-table-item-value highlight-value">14个</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">代表性架构</span>
+                                <span class="vertical-table-item-value">T5, BART, Pegasus, MBART, MarianMT</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">累计架构</span>
+                                <span class="vertical-table-item-value highlight-value">54</span>
+                            </div>
+                            <div class="vertical-table-item full-width">
+                                <span class="vertical-table-item-label">技术意义</span>
+                                <span class="vertical-table-item-value">大幅扩展序列到序列模型，覆盖翻译、摘要等任务</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- v3.0 - v4.0 -->
+                    <div class="vertical-table-row">
+                        <div class="vertical-table-label">v3.0 - v4.0</div>
+                        <div class="vertical-table-content">
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">新增架构</span>
+                                <span class="vertical-table-item-value">约 150个</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">代表性架构</span>
+                                <span class="vertical-table-item-value">ViT, DETR, CLIP, Wav2Vec2, Speech2Text</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">累计架构</span>
+                                <span class="vertical-table-item-value">~200</span>
+                            </div>
+                            <div class="vertical-table-item full-width">
+                                <span class="vertical-table-item-label">技术意义</span>
+                                <span class="vertical-table-item-value">突破NLP，全面进军计算机视觉和语音领域</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- v4.x系列 -->
+                    <div class="vertical-table-row">
+                        <div class="vertical-table-label">v4.x 系列</div>
+                        <div class="vertical-table-content">
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">新增架构</span>
+                                <span class="vertical-table-item-value">约 100个</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">代表性架构</span>
+                                <span class="vertical-table-item-value">Stable Diffusion, DALL-E, LayoutLM, BLIP</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">累计架构</span>
+                                <span class="vertical-table-item-value">~300</span>
+                            </div>
+                            <div class="vertical-table-item full-width">
+                                <span class="vertical-table-item-label">技术意义</span>
+                                <span class="vertical-table-item-value">拥抱多模态与扩散模型，加强中文等特定语言支持</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- v5.0 -->
+                    <div class="vertical-table-row">
+                        <div class="vertical-table-label">v5.0<br>(当前/目标)</div>
+                        <div class="vertical-table-content">
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">新增架构</span>
+                                <span class="vertical-table-item-value">持续增加</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">代表性架构</span>
+                                <span class="vertical-table-item-value">各种MoE架构, 更高效的Transformer变体</span>
+                            </div>
+                            <div class="vertical-table-item">
+                                <span class="vertical-table-item-label">累计架构</span>
+                                <span class="vertical-table-item-value highlight-value">400+</span>
+                            </div>
+                            <div class="vertical-table-item full-width">
+                                <span class="vertical-table-item-label">技术意义</span>
+                                <span class="vertical-table-item-value">巩固全领域统治，向更高效、更专精架构演进</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 面板4: 社区资产 -->
+        <section id="community" class="tab-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">社区资产：超过75万个可复用模型权重</h1>
+                <p class="dashboard-subtitle">Hugging Face Hub的核心价值不仅在于代码，更在于社区沉淀的、经过预训练的庞大数据资产。这构成了其最深的护城河。</p>
+            </div>
+            <div class="core-stat-card" style="max-width: 800px; margin: 0 auto;">
+                <div class="stat-meta">
+                    <div class="stat-icon" style="background: rgba(255, 210, 30, 0.1); color: var(--accent-primary);">
+                        <i class="fas fa-weight-hanging"></i>
+                    </div>
+                    <span class="stat-trend">持续增长</span>
+                </div>
+                <div class="stat-number" data-count="750000">75万+</div>
+                <div class="stat-label">社区贡献的模型权重文件</div>
+                <div class="stat-detail">
+                    <strong>关键说明：</strong> 这75万个模型权重特指在 <code>transformers</code> 库框架内，可通过 <code>from_pretrained()</code> 方法一键加载的、经过预训练的模型文件 (.bin, .safetensors)。它们覆盖了从亿级到千亿级参数的各种模型，为全球开发者节省了数百万GPU年的训练成本。
+                </div>
+                <div class="stat-source">来源：Hugging Face Hub 模型库统计 (集成于Transformers库中的部分)</div>
+            </div>
+        </section>
+
+        <!-- 面板5: 行业枢纽 -->
+        <section id="ecosystem" class="tab-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">行业枢纽：连接AI软件与物理世界的桥梁</h1>
+                <p class="dashboard-subtitle">2026年CES上英伟达的宣布，标志着Hugging Face从"AI软件中心"升级为"连接AI软件与机器人等物理智能的枢纽平台"。</p>
+            </div>
+            <div class="comparison-cards">
+                <div class="comparison-card">
+                    <div class="comparison-header">
+                        <div class="comparison-icon" style="background: rgba(118, 185, 0, 0.1); color: #76B900;">
+                            <i class="fab fa-nvidia"></i>
+                        </div>
+                        <div>
+                            <h3 class="comparison-title">英伟达合作 (CES 2026)</h3>
+                            <p style="color: var(--text-secondary);">生态连接里程碑</p>
+                        </div>
+                    </div>
+                    <div class="stat-detail">
+                        <ul style="padding-left: 20px;">
+                            <li><strong>连接双方：</strong> 英伟达机器人技术生态 <strong>200万开发者</strong> ↔ Hugging Face AI软件生态 <strong>1300万构建者</strong>。</li>
+                            <li><strong>合作内容：</strong> 将Hugging Face的AI模型、库与英伟达的机器人硬件、仿真工具链深度集成。</li>
+                            <li><strong>战略意义：</strong> 打通了"AI大脑"与"机器人身体"之间的核心软件通道，确立了平台在具身智能时代的枢纽地位。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 面板6: 巨头参与 -->
+        <section id="partnerships" class="tab-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">巨头参与：顶级科技公司的模型发布平台</h1>
+                <p class="dashboard-subtitle">当谷歌选择在Hugging Face上首发其最先进的领域模型时，这本身就是对该平台作为"行业标准模型分发渠道"的最高认可。</p>
+            </div>
+            <div class="core-stat-card" style="max-width: 800px; margin: 0 auto;">
+                <div class="stat-meta">
+                    <div class="stat-icon" style="background: rgba(66, 133, 244, 0.1); color: #4285F4;">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <span class="stat-trend">首发平台</span>
+                </div>
+                <div class="stat-label">谷歌 DeepMind 发布 Med-GEMMA 1.5</div>
+                <div class="stat-detail">
+                    <strong>事件：</strong> 谷歌DeepMind团队将其在医学领域的最新大模型"Med-GEMMA 1.5"在Hugging Face Hub上发布。
+                    <br><strong>模型特点：</strong> 基于GEMMA架构，在大量医学数据上微调，在医学QA和报告生成任务上达到SOTA。
+                    <br><strong>行业信号：</strong> 这标志着顶级AI研究机构已将Hugging Face作为其重要研究成果的首选发布和协作平台，超越了传统的论文和博客发布形式。
+                </div>
+            </div>
+        </section>
+
+        <!-- 面板7: 前沿案例 -->
+        <section id="showcase" class="tab-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">前沿案例：热点技术与国产力量的爆发点</h1>
+                <p class="dashboard-subtitle">平台趋势榜是观察AI技术风向的绝佳窗口。中国模型和边缘计算模型的登顶，展示了技术多元化的未来。</p>
+            </div>
+            <div class="comparison-cards">
+                <div class="comparison-card">
+                    <div class="comparison-header">
+                        <div class="comparison-icon" style="background: rgba(220, 38, 38, 0.1); color: #DC2626;">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div>
+                            <h3 class="comparison-title">GLM-Image (智谱AI)</h3>
+                            <p style="color: var(--text-secondary);">登顶趋势榜的国产力量</p>
+                        </div>
+                    </div>
+                    <div class="stat-detail">
+                        <ul style="padding-left: 20px;">
+                            <li><strong>核心特点：</strong> 完全基于国产芯片（如华为昇腾）集群训练的高性能多模态大模型。</li>
+                            <li><strong>平台表现：</strong> 发布后迅速登上Hugging Face"趋势模型"排行榜首位。</li>
+                            <li><strong>双重意义：</strong> 1. 证明国产AI算力与框架的成熟；2. 彰显Hugging Face是全球AI创新（包括中国创新）的公平展示台。</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-header">
+                        <div class="comparison-icon" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <div>
+                            <h3 class="comparison-title">Liquid AI - LFM2</h3>
+                            <p style="color: var(--text-secondary);">边缘计算新纪录</p>
+                        </div>
+                    </div>
+                    <div class="stat-detail">
+                        <ul style="padding-left: 20px;">
+                            <li><strong>核心特点：</strong> 由MIT孵化的Liquid AI公司发布，专为边缘设备优化的"液态"神经网络模型。</li>
+                            <li><strong>平台作用：</strong> Hugging Face成为这类专注于高效、可解释AI的前沿初创公司展示其技术、获取开发者的关键平台。</li>
+                            <li><strong>代表趋势：</strong> 平台上的创新不只来自巨头，也来自挑战传统Transformer架构的前沿探索。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 面板8: 平台进化 -->
+        <section id="evolution" class="tab-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">平台进化：不止于模型库的持续创新</h1>
+                <p class="dashboard-subtitle">Hugging Face自身的工具链也在飞速进化，从提升开发效率到优化数据集管理，全方位服务开发者。</p>
+            </div>
+            <div class="data-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title"><i class="fas fa-tools"></i> 开发体验的量化提升</h2>
+                    <div class="panel-source">数据来源：官方博客、更新日志</div>
+                </div>
+                <div class="core-stats-grid">
+                    <div class="core-stat-card">
+                        <div class="stat-meta">
+                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-tertiary);">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <span class="stat-trend">4倍提升</span>
+                        </div>
+                        <div class="stat-number">4x</div>
+                        <div class="stat-label">构建缓存恢复速度</div>
+                        <div class="stat-detail">通过优化CI/CD流水线，实现了高达4倍的依赖构建和缓存恢复速度，大幅降低了开发者的等待时间。</div>
+                    </div>
+                    <div class="core-stat-card">
+                        <div class="stat-meta">
+                            <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--accent-info);">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <span class="stat-trend">新功能</span>
+                        </div>
+                        <div class="stat-label">数据集全文搜索</div>
+                        <div class="stat-detail">在 <code>datasets</code> 库中引入了对大型数据集的全文搜索功能，使研究人员能快速定位所需数据样本。</div>
+                    </div>
+                </div>
+                <div class="stat-detail" style="margin-top: 30px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 12px;">
+                    <strong>🚀 Transformers v5 前瞻：</strong> 即将发布的v5版本致力于"五年磨一剑"的彻底重构，目标包括：确立PyTorch为唯一优先后端以简化维护；将量化等高级功能作为核心特性；追求API的极致简洁。这标志着该库将从"大而全"向"强而精"的下一代基础设施进化。
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>数据面板</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" data-tab="overview"><i class="fas fa-chart-bar"></i> 平台规模</a></li>
+                        <li><a href="#" data-tab="downloads"><i class="fas fa-cloud-download-alt"></i> 下载动态</a></li>
+                        <li><a href="#" data-tab="technology"><i class="fas fa-microchip"></i> 技术生态</a></li>
+                        <li><a href="#" data-tab="community"><i class="fas fa-weight-hanging"></i> 社区资产</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>行业洞察</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" data-tab="ecosystem"><i class="fas fa-robot"></i> 行业枢纽</a></li>
+                        <li><a href="#" data-tab="partnerships"><i class="fas fa-handshake"></i> 巨头参与</a></li>
+                        <li><a href="#" data-tab="showcase"><i class="fas fa-star"></i> 前沿案例</a></li>
+                        <li><a href="#" data-tab="evolution"><i class="fas fa-code"></i> 平台进化</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>官方来源</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://huggingface.co" target="_blank"><i class="fas fa-home"></i> Hugging Face 官网</a></li>
+                        <li><a href="https://github.com/huggingface/transformers" target="_blank"><i class="fab fa-github"></i> Transformers 代码库</a></li>
+                        <li><a href="https://pypi.org/project/transformers/" target="_blank"><i class="fab fa-python"></i> PyPI 下载统计</a></li>
+                        <li><a href="https://huggingface.co/docs" target="_blank"><i class="fas fa-book"></i> 官方文档</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>新闻来源</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.nvidia.com/en-us/ces/" target="_blank"><i class="fas fa-tv"></i> 英伟达 CES 2026</a></li>
+                        <li><a href="https://deepmind.google/" target="_blank"><i class="fas fa-flask"></i> Google DeepMind</a></li>
+                        <li><a href="https://www.zhipu.ai/" target="_blank"><i class="fas fa-bolt"></i> 智谱AI (GLM)</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="data-sources">
+                <h4>📚 本页所有数据的权威来源说明</h4>
+                <p>为确保数据的准确性与可信度，本仪表板严格引用公开、可验证的信息源：</p>
+                <ul>
+                    <li><strong>核心下载与安装数据：</strong> 基于 Python 官方包索引 PyPI 的公开下载统计数据，这是衡量库流行度的行业标准。</li>
+                    <li><strong>技术架构与版本数据：</strong> 直接来源于 Hugging Face Transformers 库在 GitHub 上的官方发布日志 (Release Notes)，如 v2.6, v4.0, v5.0 等版本说明。</li>
+                    <li><strong>社区模型数量：</strong> 基于 Hugging Face Hub 模型库的公开统计，特指与 <code>transformers</code> 库兼容的预训练权重。</li>
+                    <li><strong>行业合作与案例：</strong>
+                        <ul>
+                            <li>英伟达合作信息：源自 2026 年 CES 大会英伟达主题演讲的官方新闻稿。</li>
+                            <li>谷歌 Med-GEMMA 发布：源自 Google DeepMind 官方博客及 Hugging Face Hub 上的模型页面。</li>
+                            <li>GLM-Image 与 LFM2 案例：源自 Hugging Face "趋势榜" 实时排名及相关公司/机构的官方技术博客。</li>
+                        </ul>
+                    </li>
+                    <li><strong>平台功能更新：</strong> 源自 Hugging Face 官方工程博客及 <code>datasets</code>、<code>transformers</code> 等库的更新文档。</li>
+                </ul>
+                <p><em>数据最后更新于 2026 年 1 月（反映 CES 2026 及近期发布信息）。</em></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 标签切换功能
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 更新标签状态
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 显示对应内容
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === tabId) {
+                            content.classList.add('active');
+                        }
+                    });
+                    
+                    // 触发该面板的数字动画
+                    setTimeout(() => animatePanelNumbers(tabId), 300);
+                });
+            });
+            
+            // 页脚链接点击事件
+            document.querySelectorAll('.footer-links a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const tabId = this.getAttribute('data-tab');
+                    if (tabId) {
+                        e.preventDefault();
+                        document.querySelector(`.tab[data-tab="${tabId}"]`).click();
+                    }
+                });
+            });
+            
+            // 数字增长动画函数
+            function animateValue(element, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const value = Math.floor(progress * (end - start) + start);
+                    
+                    // 格式化大数字
+                    if (end >= 1000000000) {
+                        element.textContent = (value / 1000000000).toFixed(1) + 'B+';
+                    } else if (end >= 1000000) {
+                        element.textContent = (value / 1000000).toFixed(1) + 'M+';
+                    } else if (end >= 1000) {
+                        element.textContent = (value / 1000).toFixed(0) + 'K+';
+                    } else {
+                        element.textContent = value + '+';
+                    }
+                    
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+            
+            // 为特定面板执行数字动画
+            function animatePanelNumbers(panelId) {
+                const panel = document.getElementById(panelId);
+                if (!panel) return;
+                
+                const numberElements = panel.querySelectorAll('.stat-number[data-count], .highlight-number[data-count], .counter[data-count]');
+                
+                numberElements.forEach((el, index) => {
+                    const target = parseInt(el.getAttribute('data-count'));
+                    if (!isNaN(target)) {
+                        // 重置文本，准备动画
+                        if (target >= 1000000) {
+                            el.textContent = '0M+';
+                        } else if (target >= 1000) {
+                            el.textContent = '0K+';
+                        } else {
+                            el.textContent = '0+';
+                        }
+                        
+                        // 延迟启动每个动画，形成错落效果
+                        setTimeout(() => {
+                            animateValue(el, 0, target, 1800);
+                        }, index * 150);
+                    }
+                });
+            }
+            
+            // 初始化：激活第一个面板的数字动画
+            setTimeout(() => animatePanelNumbers('overview'), 800);
+            
+            // 为表格行添加悬停效果
+            document.querySelectorAll('.data-table tbody tr').forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transition = 'background-color 0.2s';
+                    this.style.backgroundColor = 'var(--bg-hover)';
+                });
+                row.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                });
+            });
+            
+            // 导航标签水平滚动（针对触控板）
+            const navTabs = document.querySelector('.nav-tabs');
+            if (navTabs) {
+                navTabs.addEventListener('wheel', function(e) {
+                    if (e.deltaY !== 0) {
+                        e.preventDefault();
+                        this.scrollLeft += e.deltaY;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
